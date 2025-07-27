@@ -1,4 +1,5 @@
-import { Inter } from "next/font/google";
+import { Inter,Bricolage_Grotesque} from "next/font/google";
+
 import "./globals.css";
 import "./prism.css";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -6,14 +7,14 @@ import { AppContextProvider } from "@/context/AppContext";
 import { Toaster } from "react-hot-toast";
 
 
-const inter = Inter({
-  variable: "--font-inter",
+const inter = Bricolage_Grotesque({
+  variable: "--font-bricolage_grotesque",
   subsets: ["latin"],
 });
 
 export const metadata = {
   title: "Lunar AI",
-  description: "Full Stack Project",
+  description: "AI Chatbot for simple tasks",
 };
 
 export default function RootLayout({ children }) {
