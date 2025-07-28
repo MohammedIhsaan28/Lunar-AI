@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Sidebar from "@/components/Sidebar";
 import { useEffect , useState , useRef } from "react";
-import {assets} from "@/assets/assets";
+import { assets } from "@/assets/assets";
 import PromptBox from "@/components/Promptbox";
 import Message from "@/components/Message";
 import { useAppContext } from "@/context/AppContext";

@@ -6,7 +6,7 @@ import connectDB from "@/config/db";
 
 export async function POST(req) {
   try {
-    if (!process.env.DEEPSEEK_API_KEY) {
+    if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json(
         {
           success: false,
@@ -52,7 +52,7 @@ export async function POST(req) {
 
     // Call Gemini API
     const geminiRes = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + process.env.DEEPSEEK_API_KEY,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + process.env.GEMINI_API_KEY,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

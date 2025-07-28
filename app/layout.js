@@ -1,4 +1,4 @@
-import { Inter,Bricolage_Grotesque} from "next/font/google";
+import { Bricolage_Grotesque} from "next/font/google";
 
 import "./globals.css";
 import "./prism.css";
@@ -7,7 +7,7 @@ import { AppContextProvider } from "@/context/AppContext";
 import { Toaster } from "react-hot-toast";
 
 
-const inter = Bricolage_Grotesque({
+const briocolage = Bricolage_Grotesque({
   variable: "--font-bricolage_grotesque",
   subsets: ["latin"],
 });
@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <AppContextProvider>
         <html lang="en">
-          <body className={`${inter.className} antialiased`}>
+          <body className={`${briocolage.className} antialiased`}>
             <Toaster toastOptions={
               { success : {style:{ background: "black", color:"white"}},
               error:{style:{background: "black", color:"white"}}

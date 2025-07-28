@@ -54,7 +54,7 @@ const Promptbox = ({ setIsLoading, isLoading }) => {
         messages: [...prev.messages, userPrompt],
       }));
 
-      const { data } = await axios.post("/api/chat/send", {
+      const { data } = await axios.post("/api/chat/ai", {
         chatId: selectedChat._id,
         prompt,
       });
