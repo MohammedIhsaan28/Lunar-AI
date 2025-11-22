@@ -3,6 +3,7 @@ import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import Chat from "@/models/Chat";
 import connectDB from "@/config/db";
+import { SYSTEM_PROMPT } from "@/utils/prompts";
 
 export async function POST(req) {
   try {
@@ -52,12 +53,16 @@ export async function POST(req) {
 
     // Call Gemini API
     const geminiRes = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + process.env.GEMINI_API_KEY,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
+        process.env.GEMINI_API_KEY,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
+          systemInstruction: {
+            parts: [{ text: SYSTEM_PROMPT }],
+          },
+          contents: [{ parts: [{ text: prompt }] }],
         }),
       }
     );
@@ -78,27 +83,36 @@ export async function POST(req) {
     await data.save();
 
     return NextResponse.json({ success: true, data: message });
-
   } catch (error) {
     const errMessage = error?.message?.toLowerCase();
 
     if (errMessage?.includes("api key")) {
-      return NextResponse.json({
-        success: false,
-        message: "Invalid or expired Gemini API key. Please check your Google Cloud subscription.",
-      }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Invalid or expired Gemini API key. Please check your Google Cloud subscription.",
+        },
+        { status: 401 }
+      );
     }
 
     if (errMessage?.includes("insufficient") || errMessage?.includes("quota")) {
-      return NextResponse.json({
-        success: false,
-        message: "Insufficient balance or quota in your Gemini API account.",
-      }, { status: 402 });
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Insufficient balance or quota in your Gemini API account.",
+        },
+        { status: 402 }
+      );
     }
 
-    return NextResponse.json({
-      success: false,
-      message: error.message || "Something went wrong.",
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        message: error.message || "Something went wrong.",
+      },
+      { status: 500 }
+    );
   }
 }
