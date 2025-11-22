@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
-import ReactMarkdown from "react-markdown";
-import Prism from "prismjs";
-import toast from "react-hot-toast";
-import { markdownComponents } from "@/components/MarkDown";
 import { assets } from "@/assets/assets";
-
-const MessageBubble = ({ role, content }) => {
+import Markdown from "react-markdown";
+import Prism from "prismjs";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { markdownComponents } from "./MarkDown";
+const Message = ({ role, content }) => {
   useEffect(() => {
     Prism.highlightAll();
   }, [content]);
@@ -16,47 +16,88 @@ const MessageBubble = ({ role, content }) => {
     toast.success("Message copied to clipboard");
   };
 
+ 
+
   return (
-    <div className={`flex w-full ${role === "user" ? "justify-end" : "justify-start"} mb-6`}>
+    <div
+      className={`flex flex-col w-full text-sm ${
+        role === "user" ? "items-end" : "items-center"
+      }`}
+    >
       <div
-        className={`relative group flex items-start gap-3 max-w-[80%] rounded-2xl p-5 shadow-xl transition-all duration-200
-        ${
-          role === "user"
-            ? "bg-gradient-to-br from-blue-600 to-cyan-700 border border-white/10 text-white"
-            : "bg-white/10 backdrop-blur-md border border-cyan-400/30 text-white"
+        className={`flex w-full mb-8 ${
+          role === "user" ? "justify-end pr-4" : "justify-center"
         }`}
       >
-
-        {/* AI Avatar */}
-        {role !== "user" && (
-          <Image
-            src={assets.logo_icon1}
-            alt="ai"
-            className="h-10 w-10 rounded-full border border-white/20 shadow-lg"
-          />
-        )}
-
-        {/* MESSAGE CONTENT */}
-        <div className="flex-1 whitespace-pre-line leading-relaxed overflow-x-auto text-[16px]">
-          {role === "user" ? (
-            <span className="text-white break-words">{content}</span>
-          ) : (
-            <ReactMarkdown components={markdownComponents}>{content}</ReactMarkdown>
-          )}
-        </div>
-
-        {/* ACTION ICONS */}
         <div
-          className={`absolute opacity-0 group-hover:opacity-100 transition-all duration-200 flex gap-3
-          ${role === "user" ? "right-2 -bottom-8" : "left-1 -bottom-10"}`}
+          className={`group relative flex rounded-xl ${
+            role === "user"
+              ? "max-w-2xl py-3 bg-[#53535b] px-5 flex-row-reverse mr-4"
+              : "max-w-6xl py-4 gap-3 bg-white/5 px-6"
+          }`}
         >
-          <Image onClick={copyMessage} src={assets.copy_icon} alt="copy" className="w-5 cursor-pointer hover:scale-110" />
+          <div
+            className={`opacity-0 group-hover:opacity-100 absolute ${
+              role === "user" ? "right-2 top-14" : "left-9 -bottom-10"
+            } transition-all`}
+          >
+            <div className="flex items-center gap-2 opacity-70">
+              {role === "user" ? (
+                <>
+                  <Image
+                    onClick={copyMessage}
+                    src={assets.copy_icon}
+                    alt=""
+                    className="w-4 cursor-pointer"
+                  />
+                  <Image
+                    src={assets.pencil_icon}
+                    alt=""
+                    className="w-4.5 cursor-pointer"
+                  />
+                </>
+              ) : (
+                <>
+                  <Image
+                    onClick={copyMessage}
+                    src={assets.copy_icon}
+                    alt=""
+                    className="w-4.5 cursor-pointer"
+                  />
+                  <Image
+                    src={assets.regenerate_icon}
+                    alt=""
+                    className="w-4 cursor-pointer"
+                  />
+                  <Image
+                    src={assets.like_icon}
+                    alt=""
+                    className="w-4 cursor-pointer"
+                  />
+                  <Image
+                    src={assets.dislike_icon}
+                    alt=""
+                    className="w-4 cursor-pointer"
+                  />
+                </>
+              )}
+            </div>
+          </div>
 
-          {role !== "user" && (
+          {role === "user" ? (
+            <span className="text-white text-lg text-right break-words">
+              {content}
+            </span>
+          ) : (
             <>
-              <Image src={assets.regenerate_icon} alt="regen" className="w-5 cursor-pointer hover:scale-110" />
-              <Image src={assets.like_icon} alt="like" className="w-5 cursor-pointer hover:scale-110" />
-              <Image src={assets.dislike_icon} alt="dislike" className="w-5 cursor-pointer hover:scale-110" />
+              <Image
+                src={assets.logo_icon1}
+                alt="logo_icon1"
+                className="h-9 w-9 p-1 border border-white/15 rounded-full flex-shrink-0 mt-1"
+              />
+              <div className="space-y-4 w-full overflow-auto text-base text-left">
+                <Markdown components={markdownComponents}>{content}</Markdown>
+              </div>
             </>
           )}
         </div>
@@ -65,26 +106,5 @@ const MessageBubble = ({ role, content }) => {
   );
 };
 
-export default function ChatUI() {
-  const [messages, setMessages] = useState([
-    { role: "ai", content: "Hello 🌌 I am **COSMOS-AI** — ask me anything about space & astrophysics!" }
-  ]);
+export default Message;
 
-  return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-black via-[#050b18] to-black bg-fixed text-white px-4 py-6 flex flex-col">
-
-      <div className="flex-1 w-full mx-auto max-w-4xl overflow-y-auto space-y-4 pb-10">
-        {messages.map((msg, index) => (
-          <MessageBubble key={index} role={msg.role} content={msg.content} />
-        ))}
-      </div>
-
-      {/* Typing indicator */}
-      <div className="flex gap-2 items-center mt-2 mx-auto">
-        <span className="w-2 h-2 bg-cyan-300 rounded-full animate-pulse"></span>
-        <span className="w-2 h-2 bg-cyan-300 rounded-full animate-pulse delay-150"></span>
-        <span className="w-2 h-2 bg-cyan-300 rounded-full animate-pulse delay-300"></span>
-      </div>
-    </div>
-  );
-}
