@@ -74,10 +74,3 @@ Make sure your `.env` file is present and contains your MongoDB Atlas URI and AP
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Docker](https://www.docker.com/)
 
-## License
-
-MIT
-
----
-
-**Made with ❤️ by
