@@ -7,7 +7,7 @@ import { SYSTEM_PROMPT } from "@/utils/prompts";
 
 export async function POST(req) {
   try {
-    if (!process.env.GEMINI_API_KEY) {
+    if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
       return NextResponse.json(
         {
           success: false,
@@ -53,8 +53,8 @@ export async function POST(req) {
 
     // Call Gemini API
     const geminiRes = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
-        process.env.GEMINI_API_KEY,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
+        process.env.GOOGLE_GENERATIVE_AI_API_KEY,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
